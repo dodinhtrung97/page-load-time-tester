@@ -3,7 +3,7 @@
 ## Description
 A simple webpage performance tester using selenium <br/>
 
-Require chromedriver, downloadable from `http://chromedriver.chromium.org/downloads`
+Require chromedriver, downloadable from <http://chromedriver.chromium.org/downloads>
 
 ## Language
 Python
