@@ -32,26 +32,35 @@ For example: </br>
 
 ```
 {
-  "loadingTime": 4610.885000001872,
+  "url": "https://github.com/dodinhtrung97/page-load-time-tester/blob/master/src/main.py",
+  "averageLoadingTime": 1122.7141666689324,
   "resultSet": [
     {
-      "entryType": "navigation",
-      "initiatorType": "navigation",
-      "loadingTime": 2151.194999998552,
-      "name": "http://chromedriver.chromium.org/downloads"
-    },
-    {
-      "entryType": "resource",
-      "initiatorType": "link",
-      "loadingTime": 155.13500000088243,
-      "name": "http://www.gstatic.com/sites/p/d6fdbe/system/app/themes/ski/standard-css-ski-ltr-ltr.css"
-    },
-    {
-      "entryType": "resource",
-      "initiatorType": "link",
-      "loadingTime": 1394.894999997632,
-      "name": "http://chromedriver.chromium.org/_/rsrc/1553869715000/system/app/css/overlay.css?cb=ski10a250goog-ws-leftnone30themedefaultstandard"
-    },
+      "loadingTime": 2974.0399999936926,
+      "attempt_1": [
+        {
+          "entryType": "navigation",
+          "initiatorType": "navigation",
+          "loadingTime": 1128.8899999999558,
+          "name": "https://github.com/dodinhtrung97/page-load-time-tester/blob/master/src/main.py"
+        },
+        {
+          "entryType": "resource",
+          "initiatorType": "link",
+          "loadingTime": 186.60499999532476,
+          "name": "https://github.githubassets.com/assets/frameworks-2322f54af916007dd939df6c24bd2264.css"
+        },
+        {
+          "entryType": "resource",
+          "initiatorType": "link",
+          "loadingTime": 188.09999999939464,
+          "name": "https://github.githubassets.com/assets/site-fb3830abec4858c7644fa8b4f8759252.css"
+        },
+        ...
+      ]
+      ...
+    }
     ...
+  ]
 }
 ```

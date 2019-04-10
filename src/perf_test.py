@@ -10,12 +10,17 @@ logging.basicConfig(level=logging.INFO)
 
 class performanceTest:
 
-	def __init__(self, url, log_file, driver_path):
+	def __init__(self, url, log_file, driver_path, loop):
 		self.url = url
 		self.log_file = log_file
 		self.driver_path = driver_path
+		self.loop = loop
+
 		self.log_dir = './log'
 		self.__options = ''
+		self.output_json = {"url": self.url,
+						    "averageLoadingTime": 0,
+						    "resultSet": []}
 
 		self.load_driver_options()
 
@@ -27,29 +32,38 @@ class performanceTest:
 								  executable_path=self.driver_path,
 								  chrome_options=self.__options)
 
-		try:
-			driver.get(self.url)
-		except Exception as e:
-			LOGGER.error("Failed to connect to URL: {}".format(self.url))
-			raise
+		attemp_number = 1
+		total_loading_time = 0
 
-		performance_data = driver.execute_script("return window.performance.getEntries();")
-		reduced_performance_data = self.reduce_data_set(performance_data)
+		while attemp_number <= self.loop:
+			driver.get(self.url)
+
+			performance_data = driver.execute_script("return window.performance.getEntries();")
+			reduced_performance_data = self.reduce_data_set(performance_data, attemp_number)
+
+			# Append current attempt at loading to output data
+			total_loading_time += reduced_performance_data['loadingTime']
+			self.output_json['resultSet'].append(reduced_performance_data)
+
+			attemp_number += 1	
+
+		self.output_json['averageLoadingTime'] = total_loading_time / self.loop
 
 		if not os.path.exists(self.log_dir):
 			os.makedirs(self.log_dir)
 
 		with open(os.path.join(self.log_dir, self.log_file), 'w') as f:
-		    json.dump(reduced_performance_data, f)
+		    json.dump(self.output_json, f)
 
 		driver.close()
 
-	def reduce_data_set(self, data_set):
+	def reduce_data_set(self, data_set, attemp_number):
 		"""
 		Reduce data set down to only the data that we're interested in
 		
 		Args:
 		    data_set [{}]: Description
+		    attemp_number TYPE(int): Current loop
 		
 		Returns:
 		    TYPE: Description
@@ -65,11 +79,10 @@ class performanceTest:
 			except KeyError:
 				continue
 
-		total_loading_time = sum([file['loadingTime'] for file in result])
+		loading_time = sum([file['loadingTime'] for file in result])
 
-		return {"url": self.url,
-				"loadingTime": total_loading_time,
-				"resultSet": result}
+		return {"loadingTime": loading_time,
+				"attempt_{}".format(attemp_number): result}
 
 	def load_driver_options(self):
 		"""
@@ -78,3 +91,5 @@ class performanceTest:
 		self.__options = Options()
 		self.__options.add_argument('--headless')
 		self.__options.add_argument('--disable-gpu')
+		self.__options.add_argument('--no-sandbox')
+		self.__options.add_argument('--disable-cache')

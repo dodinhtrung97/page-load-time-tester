@@ -11,6 +11,7 @@ def main():
 	parser.add_argument('chromedriver', metavar='DRIVER', type=str, help='Relative path to chromedriver')
 	parser.add_argument('url', metavar='URL', type=str, help='URL of page to do performance test')
 	parser.add_argument('log', metavar="LOG", type=str, help='Name of output json log file')
+	parser.add_argument('--loop', default=1, type=int, help='Number of times to reload page')
 
 	args = parser.parse_args()
 
@@ -19,7 +20,8 @@ def main():
 
 	performance_test = performanceTest(driver_path=args.chromedriver,
 									   url=args.url, 
-									   log_file=args.log)
+									   log_file=args.log,
+									   loop=args.loop)
 	performance_test.run()
 
 if __name__ == '__main__':
