@@ -3,6 +3,10 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 import simplejson as json
 import os
+import logging
+
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 class performanceTest:
 
@@ -18,11 +22,17 @@ class performanceTest:
 	def run(self):
 		caps = DesiredCapabilities.CHROME
 		caps['loggingPrefs'] = {'performance': 'ALL'}
+
 		driver = webdriver.Chrome(desired_capabilities=caps,
 								  executable_path=self.driver_path,
 								  chrome_options=self.__options)
 
-		driver.get(self.url)
+		try:
+			driver.get(self.url)
+		except Exception as e:
+			LOGGER.error("Failed to connect to URL: {}".format(self.url))
+			raise
+
 		performance_data = driver.execute_script("return window.performance.getEntries();")
 		reduced_performance_data = self.reduce_data_set(performance_data)
 

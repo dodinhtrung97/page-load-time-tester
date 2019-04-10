@@ -1,8 +1,10 @@
 from perf_test import performanceTest
 import argparse
 import logging
+import os
 
 LOGGER = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def main():
 	parser = argparse.ArgumentParser(description='Page loading performance test')
@@ -11,6 +13,9 @@ def main():
 	parser.add_argument('log', metavar="LOG", type=str, help='Name of output json log file')
 
 	args = parser.parse_args()
+
+	if not os.path.isfile(args.chromedriver):
+		raise FileNotFoundError('Failed to access browser driver at designated path {}'.format(args.chromedriver))
 
 	performance_test = performanceTest(driver_path=args.chromedriver,
 									   url=args.url, 
