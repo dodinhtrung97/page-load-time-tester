@@ -10,7 +10,7 @@ Python
 
 ## Usage
 
-Running `py main.py -h` will return
+Running `py src\main.py -h` will return
 
 ```
 usage: main.py [-h] DRIVER URL LOG
@@ -26,9 +26,9 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-Running `py main.py chromedriver.exe http://chromedriver.chromium.org/downloads performance.json` will return a log file in `/log` folder whose data is in json format <br/>
+Running `py src\main.py chromedriver.exe http://chromedriver.chromium.org/downloads performance.json` will return a log file in `/log` folder whose data is in json format <br/>
 
-For example </br>
+For example: </br>
 
 ```
 {
