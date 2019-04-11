@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
+
+import time
 import simplejson as json
 import os
 import logging
@@ -36,10 +38,14 @@ class performanceTest:
 		total_loading_time = 0
 
 		while attemp_number <= self.loop:
+			# Calculate loading time
+			time_start = time.time()
 			driver.get(self.url)
-
 			performance_data = driver.execute_script("return window.performance.getEntries();")
+			time_end = time.time()
+
 			reduced_performance_data = self.reduce_data_set(performance_data, attemp_number)
+			reduced_performance_data['loadingTime'] = (time_end - time_start) * 1000
 
 			# Append current attempt at loading to output data
 			total_loading_time += reduced_performance_data['loadingTime']
@@ -74,14 +80,14 @@ class performanceTest:
 			try:
 				result.append({'entryType': data['entryType'],
 							   'initiatorType': data['initiatorType'],
-							   'loadingTime': data['duration'],
+							   'loadingTime': data['duration']/2,
 							   'name': data['name']})
 			except KeyError:
 				continue
 
 		loading_time = sum([file['loadingTime'] for file in result])
 
-		return {"loadingTime": loading_time,
+		return {"loadingTime": 0,
 				"attempt_{}".format(attemp_number): result}
 
 	def load_driver_options(self):
